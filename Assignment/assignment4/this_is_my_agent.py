@@ -19,7 +19,7 @@ import argparse
 import os.path as osp
 
 import numpy as np
-from competitive_pong import evaluate_two_policies, make_envs, \
+from competitive_rl import evaluate_two_policies, make_envs, \
     get_builtin_agent_names, get_compute_action_function
 
 from load_agents import PolicyAPI
@@ -38,11 +38,12 @@ def student_compute_action_function(num_envs=1):
     Run this file directly to make sure everything is fine.
     """
     # [TODO] rewrite this function
-    my_agent_log_dir = ""
-    my_agent_suffix = ""
+    my_agent_log_dir = "./checkpoint"
+    my_agent_suffix = "test"
 
     checkpoint_path = osp.join(my_agent_log_dir,
                                "checkpoint-{}.pkl".format(my_agent_suffix))
+    print(checkpoint_path)
     if not osp.exists(checkpoint_path):
         print("Can't find anything at {}!".format(checkpoint_path))
     else:
