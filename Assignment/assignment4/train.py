@@ -16,7 +16,7 @@ from collections import deque
 import gym
 import numpy as np
 import torch
-from competitive_pong import make_envs
+from competitive_rl import make_envs
 
 from core.a2c_trainer import A2CTrainer, a2c_config
 from core.ppo_trainer import PPOTrainer, ppo_config
@@ -41,7 +41,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--num-envs",
-    default=15,
+    default=1,
     type=int,
     help="The number of parallel environments. Default: 15"
 )
@@ -66,7 +66,7 @@ parser.add_argument(
 )
 parser.add_argument(
     "--env-id",
-    default="CompetitivePong-v0",
+    default="cPong-v0",
     type=str,
     help="The environment id, should be in ['CompetitivePong-v0', "
          "'CartPole-v0', 'CompetitivePongTournament-v0']. "
@@ -85,8 +85,8 @@ def train(args):
     else:
         raise ValueError("args.algo must in [PPO, A2C]")
     config.num_envs = args.num_envs
-    assert args.env_id in ["CompetitivePong-v0", "CartPole-v0",
-                           "CompetitivePongTournament-v0"]
+    assert args.env_id in ["cPong-v0", "CartPole-v0",
+                           "cPongTournament-v0"]
 
     # Seed the environments and setup torch
     seed = args.seed
@@ -118,7 +118,7 @@ def train(args):
         resized_dim=config.resized_dim
     )
     test = env_id == "CartPole-v0"
-    tournament = env_id == "CompetitivePongTournament-v0"
+    tournament = env_id == "cPongTournament-v0"
     frame_stack = 4 if not test else 1
     if tournament:
         assert algo == "PPO", "Using PPO in tournament is a good idea, " \
@@ -163,11 +163,8 @@ def train(args):
                 #   1. Remember to disable gradient computing
                 #   2. trainer.rollouts is a storage containing all data
                 #   3. What observation is needed for trainer.compute_action?
-                values = None
-                actions = None
-                action_log_prob = None
-                pass
-
+                with torch.no_grad():
+                    values, actions, action_log_prob = trainer.compute_action(trainer.rollouts.observations[index])
                 cpu_actions = actions.view(-1).cpu().numpy()
 
                 # Step the environment
@@ -267,7 +264,8 @@ def train(args):
             ))
 
         # [TODO] Stop training when total_steps is greater than args.max_steps
-        pass
+        if total_steps > args.max_steps:
+            break
 
         iteration += 1
 

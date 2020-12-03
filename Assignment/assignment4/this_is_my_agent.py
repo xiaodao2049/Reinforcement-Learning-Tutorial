@@ -38,12 +38,11 @@ def student_compute_action_function(num_envs=1):
     Run this file directly to make sure everything is fine.
     """
     # [TODO] rewrite this function
-    my_agent_log_dir = "./checkpoint"
-    my_agent_suffix = "test"
+    my_agent_log_dir = "data/YOUR-LOG-DIR/PPO"
+    my_agent_suffix = "iter0"
 
     checkpoint_path = osp.join(my_agent_log_dir,
                                "checkpoint-{}.pkl".format(my_agent_suffix))
-    print(checkpoint_path)
     if not osp.exists(checkpoint_path):
         print("Can't find anything at {}!".format(checkpoint_path))
     else:
@@ -101,7 +100,7 @@ if __name__ == '__main__':
     assert args.right in agent_names, agent_names
 
     env = make_envs(
-        "CompetitivePongDouble-v0", num_envs=1, asynchronous=False).envs[0]
+        "cPongDouble-v0", num_envs=1, asynchronous=False).envs[0]
 
     if args.left != "MY_AGENT":
         left = get_compute_action_function(args.left)
@@ -113,7 +112,7 @@ if __name__ == '__main__':
         right = student_compute_action_function()
 
     result = evaluate_two_policies(
-        left, right, env=env, render=True,
+        left, right, env=env, render=False,
         num_episode=args.num_episodes, render_interval=0.05  # 20 FPS rendering
     )
     print(result)

@@ -90,13 +90,14 @@ class PPOTrainer(BaseTrainer):
         assert dist_entropy.requires_grad
 
         # [TODO] Implement policy loss
-        policy_loss = None
-        pass
+        ratio = torch.exp(action_log_probs - old_action_log_probs_batch)
+        surr1 = ratio * adv_targ
+        surr2 = torch.clamp(ratio, 1.0 - self.clip_param, 1.0 + self.clip_param) * adv_targ
+        policy_loss = -torch.min(surr1, surr2).mean()
 
         # [TODO] Implement value loss
-        value_loss = None
-        pass
-
+        value_loss = F.mse_loss(return_batch, values)
+        
         # This is the total loss
         loss = policy_loss + self.value_loss_weight * value_loss - \
                self.entropy_loss_weight * dist_entropy
@@ -127,7 +128,10 @@ class PPOTrainer(BaseTrainer):
                 # [TODO] Conduct one mini-batch SGD updates
                 # Hint: Remember to clip the gradient to norm self.grad_norm_max
                 #  You should step self.optimizer.
-                pass
+                self.optimizer.zero_grad()
+                total_loss.backward()
+                torch.nn.utils.clip_grad_norm_(self.model.parameters(), self.grad_norm_max)
+                self.optimizer.step()
 
                 value_loss_epoch.append(value_loss.item())
                 policy_loss_epoch.append(policy_loss.item())

@@ -33,14 +33,14 @@ class PPOTest(unittest.TestCase):
         args = parser.parse_args([
             "--env-id", "CartPole-v0",
             "--max-steps", "6000",
-            "--num-envs", "3",
+            "--num-envs", "1",
             "--algo", "PPO",
         ])
         train(args)
 
     def test_pong_single_env(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePong-v0",
+            "--env-id", "cPong-v0",
             "--max-steps", "2000",
             "--num-envs", "1",
             "--algo", "PPO",
@@ -49,16 +49,16 @@ class PPOTest(unittest.TestCase):
 
     def test_pong_multiple_env(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePong-v0",
+            "--env-id", "cPong-v0",
             "--max-steps", "6000",
-            "--num-envs", "3",
+            "--num-envs", "1",
             "--algo", "PPO",
         ])
         train(args)
 
     def test_pong_tournament_single(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePongTournament-v0",
+            "--env-id", "cPongTournament-v0",
             "--max-steps", "2000",
             "--num-envs", "1",
             "--algo", "PPO",
@@ -67,9 +67,9 @@ class PPOTest(unittest.TestCase):
 
     def test_pong_tournament_multiple(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePongTournament-v0",
+            "--env-id", "cPongTournament-v0",
             "--max-steps", "6000",
-            "--num-envs", "3",
+            "--num-envs", "1",
             "--algo", "PPO",
         ])
         train(args)
@@ -89,14 +89,14 @@ class A2CTest(unittest.TestCase):
         args = parser.parse_args([
             "--env-id", "CartPole-v0",
             "--max-steps", "600",
-            "--num-envs", "3",
+            "--num-envs", "1",
             "--algo", "A2C",
         ])
         train(args)
 
     def test_pong_single_env(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePong-v0",
+            "--env-id", "cPong-v0",
             "--max-steps", "200",
             "--num-envs", "1",
             "--algo", "A2C",
@@ -105,9 +105,9 @@ class A2CTest(unittest.TestCase):
 
     def test_pong_multiple_env(self):
         args = parser.parse_args([
-            "--env-id", "CompetitivePong-v0",
+            "--env-id", "cPong-v0",
             "--max-steps", "600",
-            "--num-envs", "3",
+            "--num-envs", "1",
             "--algo", "A2C",
         ])
         train(args)
